@@ -58,4 +58,4 @@ chmod -v 0444 ca.pem myregistry.nishanth.com-cert.pem cert.pem
 
 echo "Run the docker Registry with all the necessary Certificates on port 443"
 
-docker run -d --restart=always --name registry -v /home/ubuntu/certs:/certs -e REGISTRY_HTTP_ADDR=0.0.0.0:443 -e REGISTRY_HTTP_TLS_CERTIFICATE=/certs/myregistry.nishanth.com-cert.pem -e REGISTRY_HTTP_TLS_KEY=/certs/myregistry.nishanth.com-key.pem -p 443:443 registry:2
+# docker run -d --restart=always --name registry -v /home/ubuntu/certs:/certs -e REGISTRY_HTTP_ADDR=0.0.0.0:443 -e REGISTRY_HTTP_TLS_CERTIFICATE=/certs/myregistry.nishanth.com-cert.pem -e REGISTRY_HTTP_TLS_KEY=/certs/myregistry.nishanth.com-key.pem -p 443:443 registry:2

@@ -1,0 +1,10 @@
+Terminal - 1
+
+docker run -d --name httpserver nginx:alpine
+
+Terminal - 2
+
+docker run --net=container:httpserver benhall/curl curl -s localhost
+
+
+

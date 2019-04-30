@@ -1,0 +1,108 @@
+Setting Mandatory Access Control with SELinux
+
+1. Disable SELinux using the following command:
+
+    sudo setenforce 0
+
+2. Create a user and add it to the default Docker group so that the user can run docker commands without sudo:
+
+    sudo useradd dockertest
+    sudo passwd dockertest
+    sudo groupadd docker
+    sudo gpasswd -a dockertest docker
+
+3. Log in using the user we created earlier, and start a container as follows:
+
+    su - dockertest
+    docker container run -it -v /:/host alpine ash
+
+4. From the container, chroot to /host and run the shutdown command:
+
+    chroot /host
+    shutdown
+
+As we can see, a user in a Docker group can shut down the host system. Docker currently does not have authorization control, so if you can communicate to the Docker socket, you are allowed to run any Docker command. It is similar to /etc/sudoers:
+
+USERNAME ALL=(ALL) NOPASSWD: ALL
+
+This is really not good. Let's see how we can guard against this and more in the rest of the chapter.
+
+Solution to this problem
+###################################
+
+Solution 1. Setting Mandatory Access Control (MAC) with SELinux
+#######################################################
+
+1. Run the following command to make sure SELinux is enabled:
+
+    sudo setenforce 1
+
+    getenforce
+
+Note : Ensure the above command returns enforcing
+
+2. Ensure Docker Deamon is running with --selinux-enabled option. Check by running the below command
+
+    cat /etc/docker/deamon
+
+    docker info
+
+3. Run the Docker container without the privileged option.
+
+    su - dockertest
+
+    mkdir -p ~/dir1
+
+    docker container run -it -v ~/dir1:/dir1 alpine ash
+
+    touch /dir1/file1
+
+You will get a permission denied error because a container process with the svirt_lxc_net_t label cannot create files on the host's filesystem. 
+
+Look at the logs 
+
+cat /var/log/audit/audit.log
+
+you will see a message that access is denied
+
+
+Similarly we will do one more exercise
+
+1. Enforce the SELinux
+
+    getenforce  
+
+2. Switch the directoy 
+
+    su - dockertest
+
+3. run the docker container
+    
+    docker container run -it -v/:/host alpine ash
+
+    chroot /host
+
+    shutdown
+
+Note : it will throw an Error
+
+Exercise to protect
+
+    docker container run -it --cap-drop sys_chroot -v /:/host alpine ash
+
+    chroot /host
+
+Sharing namespaces between the host and the container
+
+docker container run -it --net=host alpine ash
+
+
+ip a
+
+
+docker container run -it --net=host --pid=host --ipc=host alpine ash
+
+
+
+
+

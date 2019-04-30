@@ -1,0 +1,70 @@
+Step 1 - Initialise Swarm Mode
+
+Command 1
+
+	docker swarm init
+
+Command 2  - Join Swarm Mode using the above swarm output from Command 1
+
+Step 2 - Create Unencrypted Overlay Network
+
+Command 3
+
+	docker network create -d overlay app1-network
+
+	docker network ls
+
+	docker network inspect app1-network
+
+Command 4
+
+	docker service create --name redis --network app1-network redis:alpine
+
+	docker service ls
+
+Command 5
+
+	docker service create --network app1-network -p 80:3000 --replicas 1 --name app1-web nishanthkp/redis-node-docker-example
+
+Step 3 - Monitor Traffic
+
+
+Command 6
+
+	sudo tcpdump -s 1500 -A -i eth0 port 4789
+
+Command 7
+
+	docker service ls
+
+Command 8
+
+	curl localhost
+
+Command 9
+
+	docker service rm redis app1-web && docker network rm app1-network
+
+Step 4 - Create Encrypted Overlay Network
+
+Command 10
+
+	docker network create -d overlay --opt encrypted app1-network
+
+Command 11
+
+	docker service create --name redis --network app1-network redis:alpine
+
+Command 12
+
+	docker service create --network app1-network -p 80:3000 --replicas 1 --name app1-web nishanthkp/redis-node-docker-example
+
+	sudo tcpdump -s 1500 -A -i eth0 port 4789
+
+Command 13
+
+	curl localhost
+
+Clean Everything by running the below Command
+
+docker service rm redis app1-web && docker network rm app1-network

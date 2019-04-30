@@ -1,0 +1,57 @@
+Docker Content Trust Basics
+
+Step 1: Enable Docker Content Trust
+
+Command 1
+
+	export DOCKER_CONTENT_TRUST=1
+
+Command 2
+
+	docker image pull nishanthkp/tu-demo
+
+Command 3
+
+	docker image pull alpine:latest
+
+Step 2: Push and sign an image
+
+
+Command 4
+
+	docker image tag alpine:latest nishanthkp/sec-test:latest
+
+Command 5
+
+	docker image ls
+
+Command 6
+
+	docker login
+
+Note - if any issue in docker  login type this command `sudo apt install gnupg2 pass`
+
+Command 7
+
+	docker image push nishanthkp/sec-test:latest
+
+	Note : A new root key (this only happens the first time you push an image after enabling DCT) & repository signing key
+
+
+
+	By default the root and repository keys are stored below ~/.docker/trust
+
+
+Step 3: Clean-up
+
+Command 8
+
+	docker image rm nishanthkp/sec-test:latest
+
+Command 9
+
+	docker image rm alpine:latest
+
+Command 10
+
+	export DOCKER_CONTENT_TRUST=0

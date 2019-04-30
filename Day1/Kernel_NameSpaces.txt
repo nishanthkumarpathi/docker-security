@@ -1,0 +1,23 @@
+### Lab Exercise
+
+In this scenario you'll learn how to configure User Namespaces to add additional user isolation and remap container root users to non-privileged users on the host machine.
+
+Step 1 - Identify current Docker user
+
+ps aux | grep docker
+
+Step 2 - Download the alpine image and check the id
+
+docker run --rm alpine id
+
+Step 3 - create a copy of the touch command on our host.
+
+sudo cp /bin/touch /bin/touch.bak && ls -lha /bin/touch.bak
+
+Step 4 - Because the container is both root inside the container and on the host, the file can be removed.
+
+docker run -it -v /bin/:/host/ alpine rm -f /host/touch.bak
+
+Step 5 - As a result, the command no longer exists.
+
+ls -lha /bin/touch.bak

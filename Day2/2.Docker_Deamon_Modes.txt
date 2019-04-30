@@ -1,0 +1,15 @@
+Step 1 - Testing the Docker Deamon
+
+Command 1
+
+    export DOCKER_CERT_PATH=`pwd`
+
+Command 2
+
+    docker --tlsverify ps
+
+Step 2 - Testing the docker mode ( Contd )
+
+Command 3
+
+    curl https://$HOST:2376/images/json --cert cert.pem --key key.pem --cacert ca.pem
